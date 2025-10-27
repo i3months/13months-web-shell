@@ -283,28 +283,3 @@ Edit `src/shared/ui/Prompt.tsx` to customize the prompt display.
 ### Modifying Virtual File System
 
 Edit `src/entities/file-system/model/VirtualFileSystem.ts` to add or modify directories and files.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👤 Author
-
-**13months**
-
-- LinkedIn: [linkedin.com/in/13months](https://linkedin.com/in/13months)
-- Blog: [13months.tistory.com](https://13months.tistory.com)
-
-## 🙏 Acknowledgments
-
-- Inspired by classic Unix/Linux terminals
-- Built with modern web technologies
-- Follows Feature-Sliced Design architecture
-
----
-
-**Try it out:** Type `help` to see all available commands!

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { CommandLine } from "./CommandLine";
 import { OutputArea, OutputItem } from "./OutputArea";
 import { useFileSystem } from "@/app/providers/FileSystemContext";
@@ -8,6 +8,16 @@ import { createCommandRegistry } from "@/entities/command/model/CommandRegistry"
 
 interface ShellProps {
   className?: string;
+}
+
+interface Position {
+  x: number;
+  y: number;
+}
+
+interface Size {
+  width: number;
+  height: number;
 }
 
 const WELCOME_MESSAGE = `Welcome to 13months Web Shell Portfolio!
@@ -20,6 +30,15 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   const { currentPath, fileSystem } = useFileSystem();
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [availableCommands, setAvailableCommands] = useState<string[]>([]);
+
+  // Window dragging state
+  const [position, setPosition] = useState<Position>({ x: 50, y: 50 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [prevPosition, setPrevPosition] = useState<Position>({ x: 50, y: 50 });
+  const [size, setSize] = useState<Size>({ width: 800, height: 600 });
+  const shellRef = useRef<HTMLDivElement>(null);
 
   // Display welcome message on mount
   useEffect(() => {
@@ -34,6 +53,17 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     // Initialize available commands
     const registry = createCommandRegistry(customCommands);
     setAvailableCommands(registry.getAllCommands());
+
+    // Center window on mount
+    const centerWindow = () => {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      setPosition({
+        x: (windowWidth - 800) / 2,
+        y: (windowHeight - 600) / 2,
+      });
+    };
+    centerWindow();
   }, []);
 
   const handleExecute = useCallback(
@@ -107,20 +137,140 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     input?.focus();
   }, []);
 
+  // Window dragging handlers
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (isMaximized) return;
+      setIsDragging(true);
+      setDragOffset({
+        x: e.clientX - position.x,
+        y: e.clientY - position.y,
+      });
+    },
+    [position, isMaximized]
+  );
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      setPosition({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y,
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, dragOffset]);
+
+  // Window control handlers
+  const handleMinimize = useCallback(() => {
+    // In a real app, this would minimize to taskbar
+    alert(
+      "Minimize functionality - in a real app, this would minimize the window"
+    );
+  }, []);
+
+  const handleMaximize = useCallback(() => {
+    if (isMaximized) {
+      setPosition(prevPosition);
+      setIsMaximized(false);
+    } else {
+      setPrevPosition(position);
+      setPosition({ x: 0, y: 0 });
+      setIsMaximized(true);
+    }
+  }, [isMaximized, position, prevPosition]);
+
+  const handleClose = useCallback(() => {
+    if (confirm("Close terminal?")) {
+      // In a real app, this would close the window
+      window.close();
+    }
+  }, []);
+
+  const windowStyle: React.CSSProperties = isMaximized
+    ? {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+      }
+    : {
+        position: "fixed",
+        top: `${position.y}px`,
+        left: `${position.x}px`,
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+      };
+
   return (
     <div
-      className={`shell flex flex-col h-screen bg-terminal-bg text-terminal-text p-2 sm:p-4 md:p-6 ${className}`}
-      onClick={handleShellClick}
-      onTouchStart={handleShellTouch}
+      ref={shellRef}
+      className={`ubuntu-window ${className}`}
+      style={windowStyle}
     >
-      <OutputArea outputs={outputs} />
-      <CommandLine
-        onExecute={handleExecute}
-        username="visitor"
-        hostname="13months"
-        currentPath={currentPath}
-        availableCommands={availableCommands}
-      />
+      {/* Title bar */}
+      <div
+        className="title-bar"
+        onMouseDown={handleMouseDown}
+        style={{
+          cursor: isDragging ? "grabbing" : "grab",
+        }}
+      >
+        <div className="title-bar-text">visitor@13months: {currentPath}</div>
+        <div className="title-bar-controls">
+          <button
+            className="title-bar-button minimize"
+            onClick={handleMinimize}
+            title="Minimize"
+          >
+            <span>−</span>
+          </button>
+          <button
+            className="title-bar-button maximize"
+            onClick={handleMaximize}
+            title={isMaximized ? "Restore" : "Maximize"}
+          >
+            <span>{isMaximized ? "❐" : "□"}</span>
+          </button>
+          <button
+            className="title-bar-button close"
+            onClick={handleClose}
+            title="Close"
+          >
+            <span>×</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Terminal content */}
+      <div
+        className="shell-content"
+        onClick={handleShellClick}
+        onTouchStart={handleShellTouch}
+      >
+        <OutputArea outputs={outputs} />
+        <CommandLine
+          onExecute={handleExecute}
+          username="visitor"
+          hostname="13months"
+          currentPath={currentPath}
+          availableCommands={availableCommands}
+        />
+      </div>
     </div>
   );
 };

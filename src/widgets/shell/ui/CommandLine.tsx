@@ -99,22 +99,25 @@ export const CommandLine: React.FC<CommandLineProps> = ({
         hostname={hostname}
         currentPath={currentPath}
       />
-      <input
-        ref={inputRef}
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        className="flex-1 min-w-0 bg-transparent border-none outline-none text-terminal-text font-mono caret-transparent text-xs sm:text-sm md:text-base touch-manipulation"
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck="false"
-        inputMode="text"
-        enterKeyHint="send"
-        aria-label="Command input"
-      />
-      <Cursor visible={true} />
+      <span className="flex-1 min-w-0 relative">
+        <span className="invisible whitespace-pre">{input}</span>
+        <Cursor visible={true} />
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="absolute left-0 top-0 w-full bg-transparent border-none outline-none text-terminal-text font-mono caret-transparent text-xs sm:text-sm md:text-base touch-manipulation"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          inputMode="text"
+          enterKeyHint="send"
+          aria-label="Command input"
+        />
+      </span>
     </div>
   );
 };

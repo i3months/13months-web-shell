@@ -20,10 +20,27 @@ interface Size {
   height: number;
 }
 
-const WELCOME_MESSAGE = `Welcome to 13months Web Shell Portfolio!
+const WELCOME_MESSAGE_LARGE = `
+     _____                                        _____                                  
+    /\\___ \\                                      /\\___ \\                                 
+    \\/__/\\ \\     __     ___     ___       __     \\/__/\\ \\    ___     ___     ___      ___ ___      ___    
+      _\\ \\ \\  /'__\`\\  / __\`\\ /' _ \`\\   /'_ \`\\      _\\ \\ \\  / __\`\\  / __\`\\ /' _ \`\\  /' __\` __\`\\   / __\`\\  
+     /\\ \\_\\ \\/\\  __/ /\\ \\L\\ \\/\\ \\/\\ \\ /\\ \\L\\ \\    /\\ \\_\\ \\/\\ \\L\\ \\/\\ \\L\\ \\/\\ \\/\\ \\ /\\ \\/\\ \\/\\ \\ /\\ \\L\\ \\ 
+     \\ \\____/\\ \\____\\\\ \\____/\\ \\_\\ \\_\\\\ \\____ \\   \\ \\____/\\ \\____/\\ \\____/\\ \\_\\ \\_\\\\ \\_\\ \\_\\ \\_\\\\ \\____/ 
+      \\/___/  \\/____/ \\/___/  \\/_/\\/_/ \\/___L\\ \\   \\/___/  \\/___/  \\/___/  \\/_/\\/_/ \\/_/\\/_/\\/_/ \\/___/  
+                                        /\\____/                                                          
+                                        \\_/__/                                                           
 
-Type 'help' to see available commands.
-Use Tab for auto-completion, Up/Down arrows for command history.
+Type 'help' to see all available commands.
+`;
+
+const WELCOME_MESSAGE_SMALL = `
+╔═══════════════════════════╗
+║   JEONG JOONMO            ║
+║   Portfolio Terminal      ║
+╚═══════════════════════════╝
+
+Type 'help' to see all available commands.
 `;
 
 export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
@@ -42,10 +59,14 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
 
   // Display welcome message on mount
   useEffect(() => {
+    // Choose welcome message based on window width
+    const welcomeMessage =
+      window.innerWidth >= 1000 ? WELCOME_MESSAGE_LARGE : WELCOME_MESSAGE_SMALL;
+
     const welcomeItem: OutputItem = {
       id: `welcome-${Date.now()}`,
       type: "system",
-      content: WELCOME_MESSAGE,
+      content: welcomeMessage,
       timestamp: Date.now(),
     };
     setOutputs([welcomeItem]);

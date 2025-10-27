@@ -5,19 +5,12 @@ import { useFileSystem } from "@/app/providers/FileSystemContext";
 import { executeCommand } from "@/features/execute-command";
 import { customCommands } from "@/entities/command/model/custom-commands";
 import { createCommandRegistry } from "@/entities/command/model/CommandRegistry";
+import { useWindowDrag } from "@/features/window-drag";
+import { useWindowResize } from "@/features/window-resize";
+import { useWindowControls } from "@/features/window-controls";
 
 interface ShellProps {
   className?: string;
-}
-
-interface Position {
-  x: number;
-  y: number;
-}
-
-interface Size {
-  width: number;
-  height: number;
 }
 
 const WELCOME_MESSAGE_LARGE = `
@@ -47,15 +40,36 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   const { currentPath, fileSystem } = useFileSystem();
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [availableCommands, setAvailableCommands] = useState<string[]>([]);
-
-  // Window dragging state
-  const [position, setPosition] = useState<Position>({ x: 50, y: 50 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
-  const [isMaximized, setIsMaximized] = useState(false);
-  const [prevPosition, setPrevPosition] = useState<Position>({ x: 50, y: 50 });
-  const [size, setSize] = useState<Size>({ width: 800, height: 600 });
   const shellRef = useRef<HTMLDivElement>(null);
+
+  // Initial window position (centered)
+  const initialPosition = {
+    x: Math.max(0, (window.innerWidth - 1200) / 2),
+    y: Math.max(0, (window.innerHeight - 700) / 2),
+  };
+  const initialSize = { width: 1200, height: 700 };
+
+  // Window management features
+  const { size, setSize, handleResizeStart } = useWindowResize({
+    initialSize,
+    minWidth: 400,
+    minHeight: 300,
+    isMaximized: false, // Will be updated by useWindowControls
+  });
+
+  const { position, setPosition, isDragging, handleDragStart } = useWindowDrag({
+    initialPosition,
+    size,
+    isMaximized: false, // Will be updated by useWindowControls
+  });
+
+  const { isMaximized, handleMinimize, handleMaximize, handleClose } =
+    useWindowControls({
+      position,
+      size,
+      setPosition,
+      setSize,
+    });
 
   // Display welcome message on mount
   useEffect(() => {
@@ -75,16 +89,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     const registry = createCommandRegistry(customCommands);
     setAvailableCommands(registry.getAllCommands());
 
-    // Center window on mount
-    const centerWindow = () => {
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      setPosition({
-        x: (windowWidth - 800) / 2,
-        y: (windowHeight - 600) / 2,
-      });
-    };
-    centerWindow();
+    // Position is already set in initial state, no need to recenter
   }, []);
 
   const handleExecute = useCallback(
@@ -158,89 +163,6 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     input?.focus();
   }, []);
 
-  // Window dragging handlers
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (isMaximized) return;
-      setIsDragging(true);
-      setDragOffset({
-        x: e.clientX - position.x,
-        y: e.clientY - position.y,
-      });
-    },
-    [position, isMaximized]
-  );
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-
-      // Calculate new position
-      let newX = e.clientX - dragOffset.x;
-      let newY = e.clientY - dragOffset.y;
-
-      // Get window dimensions
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      const shellWidth = size.width;
-      const shellHeight = size.height;
-
-      // Constrain position to viewport bounds
-      // Keep at least 50px of the window visible
-      const minVisible = 50;
-      newX = Math.max(
-        -shellWidth + minVisible,
-        Math.min(newX, windowWidth - minVisible)
-      );
-      newY = Math.max(0, Math.min(newY, windowHeight - minVisible));
-
-      setPosition({
-        x: newX,
-        y: newY,
-      });
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging, dragOffset, size]);
-
-  // Window control handlers
-  const handleMinimize = useCallback(() => {
-    // In a real app, this would minimize to taskbar
-    alert(
-      "Minimize functionality - in a real app, this would minimize the window"
-    );
-  }, []);
-
-  const handleMaximize = useCallback(() => {
-    if (isMaximized) {
-      setPosition(prevPosition);
-      setIsMaximized(false);
-    } else {
-      setPrevPosition(position);
-      setPosition({ x: 0, y: 0 });
-      setIsMaximized(true);
-    }
-  }, [isMaximized, position, prevPosition]);
-
-  const handleClose = useCallback(() => {
-    if (confirm("Close terminal?")) {
-      // In a real app, this would close the window
-      window.close();
-    }
-  }, []);
-
   const windowStyle: React.CSSProperties = isMaximized
     ? {
         position: "fixed",
@@ -266,7 +188,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
       {/* Title bar */}
       <div
         className="title-bar"
-        onMouseDown={handleMouseDown}
+        onMouseDown={handleDragStart}
         style={{
           cursor: isDragging ? "grabbing" : "grab",
         }}
@@ -312,6 +234,44 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
           availableCommands={availableCommands}
         />
       </div>
+
+      {/* Resize handles */}
+      {!isMaximized && (
+        <>
+          <div
+            className="resize-handle resize-n"
+            onMouseDown={(e) => handleResizeStart(e, "n")}
+          />
+          <div
+            className="resize-handle resize-s"
+            onMouseDown={(e) => handleResizeStart(e, "s")}
+          />
+          <div
+            className="resize-handle resize-e"
+            onMouseDown={(e) => handleResizeStart(e, "e")}
+          />
+          <div
+            className="resize-handle resize-w"
+            onMouseDown={(e) => handleResizeStart(e, "w")}
+          />
+          <div
+            className="resize-handle resize-ne"
+            onMouseDown={(e) => handleResizeStart(e, "ne")}
+          />
+          <div
+            className="resize-handle resize-nw"
+            onMouseDown={(e) => handleResizeStart(e, "nw")}
+          />
+          <div
+            className="resize-handle resize-se"
+            onMouseDown={(e) => handleResizeStart(e, "se")}
+          />
+          <div
+            className="resize-handle resize-sw"
+            onMouseDown={(e) => handleResizeStart(e, "sw")}
+          />
+        </>
+      )}
     </div>
   );
 };

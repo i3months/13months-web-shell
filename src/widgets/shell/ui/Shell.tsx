@@ -48,7 +48,7 @@ const WELCOME_MESSAGE_SMALL = `
 ||__||||__||||__||||__||||__||||__||
 |/__\\||/__\\||/__\\||/__\\||/__\\||/__\\|
 
-
+ㅌ
 Type 'help' to see all available commands.
 `;
 

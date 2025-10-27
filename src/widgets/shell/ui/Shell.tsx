@@ -91,16 +91,27 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     [currentPath, fileSystem]
   );
 
+  const handleShellClick = useCallback(() => {
+    // Focus input when clicking anywhere in the shell
+    const input = document.querySelector(
+      ".command-line input"
+    ) as HTMLInputElement;
+    input?.focus();
+  }, []);
+
+  const handleShellTouch = useCallback(() => {
+    // Focus input when touching anywhere in the shell
+    const input = document.querySelector(
+      ".command-line input"
+    ) as HTMLInputElement;
+    input?.focus();
+  }, []);
+
   return (
     <div
-      className={`shell flex flex-col h-screen bg-terminal-bg text-terminal-text p-4 ${className}`}
-      onClick={() => {
-        // Focus input when clicking anywhere in the shell
-        const input = document.querySelector(
-          ".command-line input"
-        ) as HTMLInputElement;
-        input?.focus();
-      }}
+      className={`shell flex flex-col h-screen bg-terminal-bg text-terminal-text p-2 sm:p-4 md:p-6 ${className}`}
+      onClick={handleShellClick}
+      onTouchStart={handleShellTouch}
     >
       <OutputArea outputs={outputs} />
       <CommandLine

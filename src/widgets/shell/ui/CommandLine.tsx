@@ -27,6 +27,12 @@ export const CommandLine: React.FC<CommandLineProps> = ({
     inputRef.current?.focus();
   }, []);
 
+  // Handle touch events to ensure input focus on mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    inputRef.current?.focus();
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     // Handle Enter key - execute command
     if (e.key === "Enter") {
@@ -84,7 +90,10 @@ export const CommandLine: React.FC<CommandLineProps> = ({
   };
 
   return (
-    <div className="command-line flex items-center font-mono">
+    <div
+      className="command-line flex items-center font-mono text-xs sm:text-sm md:text-base flex-shrink-0 touch-target"
+      onTouchStart={handleTouchStart}
+    >
       <Prompt
         username={username}
         hostname={hostname}
@@ -96,11 +105,14 @@ export const CommandLine: React.FC<CommandLineProps> = ({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="flex-1 bg-transparent border-none outline-none text-terminal-text font-mono caret-transparent"
+        className="flex-1 min-w-0 bg-transparent border-none outline-none text-terminal-text font-mono caret-transparent text-xs sm:text-sm md:text-base touch-manipulation"
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
+        inputMode="text"
+        enterKeyHint="send"
+        aria-label="Command input"
       />
       <Cursor visible={true} />
     </div>

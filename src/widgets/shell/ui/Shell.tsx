@@ -27,11 +27,27 @@ const WELCOME_MESSAGE_LARGE = `
 Type 'help' to see all available commands.
 `;
 
+const WELCOME_MESSAGE_MEDIUM = `
+                                                                                                   
+ ____  ____  ____  ____  ____  ____  ____  ____  ____  ____  ____ 
+||J ||||e ||||o ||||n ||||g ||||J ||||o ||||o ||||n ||||m ||||o ||
+||__||||__||||__||||__||||__||||__||||__||||__||||__||||__||||__||
+|/__\\||/__\\||/__\\||/__\\||/__\\||/__\\||/__\\||/__\\||/__\\||/__\\||/__\\|
+                                                
+                                      
+Type 'help' to see all available commands.
+`;
+
 const WELCOME_MESSAGE_SMALL = `
-╔═══════════════════════════╗
-║   JEONG JOONMO            ║
-║   Portfolio Terminal      ║
-╚═══════════════════════════╝
+ ____  ____  ____  ____  ____ 
+||J ||||e ||||o ||||n ||||g ||
+||__||||__||||__||||__||||__||
+|/__\\||/__\\||/__\\||/__\\||/__\\|
+ ____  ____  ____  ____  ____  ____ 
+||J ||||o ||||o ||||n ||||m ||||o ||
+||__||||__||||__||||__||||__||||__||
+|/__\\||/__\\||/__\\||/__\\||/__\\||/__\\|
+
 
 Type 'help' to see all available commands.
 `;
@@ -71,11 +87,16 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
       setSize,
     });
 
-  // Display welcome message on mount
+  // Display welcome message on mount and when size changes
   useEffect(() => {
-    // Choose welcome message based on window width
-    const welcomeMessage =
-      window.innerWidth >= 1000 ? WELCOME_MESSAGE_LARGE : WELCOME_MESSAGE_SMALL;
+    // Choose welcome message based on window size
+    const getWelcomeMessage = () => {
+      const width = size.width;
+      if (width >= 1200) return WELCOME_MESSAGE_LARGE;
+      if (width >= 800) return WELCOME_MESSAGE_MEDIUM;
+      return WELCOME_MESSAGE_SMALL;
+    };
+    const welcomeMessage = getWelcomeMessage();
 
     const welcomeItem: OutputItem = {
       id: `welcome-${Date.now()}`,
@@ -88,9 +109,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     // Initialize available commands
     const registry = createCommandRegistry(customCommands);
     setAvailableCommands(registry.getAllCommands());
-
-    // Position is already set in initial state, no need to recenter
-  }, []);
+  }, [size.width]);
 
   const handleExecute = useCallback(
     (input: string) => {

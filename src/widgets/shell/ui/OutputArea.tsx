@@ -15,17 +15,23 @@ const MAX_OUTPUT_ITEMS = 1000;
 
 export const OutputArea: React.FC<OutputAreaProps> = ({ outputs }) => {
   const outputEndRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new output is added
   useEffect(() => {
-    outputEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (containerRef.current) {
+      const container = containerRef.current.parentElement;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   }, [outputs]);
 
   // Apply output buffer limit
   const limitedOutputs = outputs.slice(-MAX_OUTPUT_ITEMS);
 
   return (
-    <div className="output-area flex-1 overflow-y-auto overflow-x-hidden pb-2 sm:pb-4 scrollbar-thin scrollbar-thumb-terminal-text/20 scrollbar-track-transparent overscroll-contain touch-pan-y">
+    <div ref={containerRef} className="output-area">
       {limitedOutputs.map((item) => (
         <div key={item.id} className="output-item mb-1 select-text">
           {item.type === "command" && (

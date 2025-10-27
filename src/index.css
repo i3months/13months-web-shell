@@ -181,14 +181,15 @@
   background: #300a24;
   color: #ffffff;
   padding: 16px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Output area styling for Ubuntu theme */
 .output-area {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 8px;
+  flex: 0 1 auto;
+  overflow-y: visible;
+  overflow-x: hidden;
   color: #ffffff;
 }
 
@@ -197,6 +198,8 @@
   display: flex;
   align-items: center;
   color: #8ae234;
+  flex-shrink: 0;
+  margin-top: 0;
 }
 
 /* Responsive adjustments */

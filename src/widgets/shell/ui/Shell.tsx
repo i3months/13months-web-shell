@@ -153,9 +153,29 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
+
+      // Calculate new position
+      let newX = e.clientX - dragOffset.x;
+      let newY = e.clientY - dragOffset.y;
+
+      // Get window dimensions
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const shellWidth = size.width;
+      const shellHeight = size.height;
+
+      // Constrain position to viewport bounds
+      // Keep at least 50px of the window visible
+      const minVisible = 50;
+      newX = Math.max(
+        -shellWidth + minVisible,
+        Math.min(newX, windowWidth - minVisible)
+      );
+      newY = Math.max(0, Math.min(newY, windowHeight - minVisible));
+
       setPosition({
-        x: e.clientX - dragOffset.x,
-        y: e.clientY - dragOffset.y,
+        x: newX,
+        y: newY,
       });
     };
 
@@ -172,7 +192,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging, dragOffset]);
+  }, [isDragging, dragOffset, size]);
 
   // Window control handlers
   const handleMinimize = useCallback(() => {

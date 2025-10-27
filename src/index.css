@@ -99,78 +99,103 @@
 
 /* Title bar */
 .title-bar {
-  background: linear-gradient(to bottom, #4c4c4c 0%, #2d2d2d 100%);
-  height: 36px;
+  background: linear-gradient(to bottom, #4a4a4a 0%, #3c3c3c 100%);
+  height: 32px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  border-bottom: 1px solid #1a1a1a;
+  padding: 0 6px;
   user-select: none;
-  position: relative;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  gap: 8px;
 }
 
 .title-bar-text {
-  color: #ddd;
+  color: #dcdcdc;
   font-size: 13px;
-  font-weight: 500;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  font-weight: 400;
   pointer-events: none;
+  font-family: "Ubuntu", system-ui, sans-serif;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .title-bar-controls {
   display: flex;
-  gap: 8px;
-  z-index: 1;
+  gap: 6px;
+  padding: 0 2px;
 }
 
 .title-bar-button {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.2s;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.15s ease;
   color: transparent;
+  position: relative;
+  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.title-bar-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%);
 }
 
 .title-bar-button:hover {
-  color: #2d2d2d;
+  color: rgba(0, 0, 0, 0.7);
+  transform: scale(1.08);
 }
 
-.title-bar-button.minimize {
-  background: #f1c40f;
-}
-
-.title-bar-button.minimize:hover {
-  background: #f39c12;
-}
-
-.title-bar-button.maximize {
-  background: #27ae60;
-}
-
-.title-bar-button.maximize:hover {
-  background: #229954;
+.title-bar-button:active {
+  transform: scale(0.92);
 }
 
 .title-bar-button.close {
-  background: #e74c3c;
+  background: #ec6a5e;
 }
 
 .title-bar-button.close:hover {
-  background: #c0392b;
+  background: #f4786f;
+}
+
+.title-bar-button.minimize {
+  background: #f5bf4f;
+}
+
+.title-bar-button.minimize:hover {
+  background: #f7ca5f;
+}
+
+.title-bar-button.maximize {
+  background: #61c554;
+}
+
+.title-bar-button.maximize:hover {
+  background: #6fd164;
 }
 
 .title-bar-button span {
   line-height: 1;
-  margin-top: -2px;
+  position: relative;
+  z-index: 1;
+  font-size: 16px;
+  margin-top: -1px;
 }
 
 /* Shell content */

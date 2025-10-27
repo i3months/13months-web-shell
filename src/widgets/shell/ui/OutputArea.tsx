@@ -19,12 +19,8 @@ export const OutputArea: React.FC<OutputAreaProps> = ({ outputs }) => {
 
   // Auto-scroll to bottom when new output is added
   useEffect(() => {
-    if (containerRef.current) {
-      const container = containerRef.current.parentElement;
-      if (container) {
-        container.scrollTop = container.scrollHeight;
-      }
-    }
+    // Scroll to the end marker instantly (no animation)
+    outputEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [outputs]);
 
   // Apply output buffer limit

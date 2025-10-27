@@ -55,6 +55,7 @@ Type 'help' to see all available commands.
 export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   const { currentPath, fileSystem } = useFileSystem();
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
+  const [welcomeMessage, setWelcomeMessage] = useState<OutputItem | null>(null);
   const [availableCommands, setAvailableCommands] = useState<string[]>([]);
   const shellRef = useRef<HTMLDivElement>(null);
 
@@ -90,26 +91,28 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   // Display welcome message on mount and when size changes
   useEffect(() => {
     // Choose welcome message based on window size
-    const getWelcomeMessage = () => {
+    const getWelcomeMessageText = () => {
       const width = size.width;
       if (width >= 1200) return WELCOME_MESSAGE_LARGE;
-      if (width >= 800) return WELCOME_MESSAGE_MEDIUM;
+      if (width >= 1100) return WELCOME_MESSAGE_MEDIUM;
       return WELCOME_MESSAGE_SMALL;
     };
-    const welcomeMessage = getWelcomeMessage();
+    const messageText = getWelcomeMessageText();
 
     const welcomeItem: OutputItem = {
-      id: `welcome-${Date.now()}`,
+      id: "welcome-permanent",
       type: "system",
-      content: welcomeMessage,
+      content: messageText,
       timestamp: Date.now(),
     };
-    setOutputs([welcomeItem]);
+    setWelcomeMessage(welcomeItem);
 
-    // Initialize available commands
-    const registry = createCommandRegistry(customCommands);
-    setAvailableCommands(registry.getAllCommands());
-  }, [size.width]);
+    // Initialize available commands only once
+    if (availableCommands.length === 0) {
+      const registry = createCommandRegistry(customCommands);
+      setAvailableCommands(registry.getAllCommands());
+    }
+  }, [size.width, availableCommands.length]);
 
   const handleExecute = useCallback(
     (input: string) => {
@@ -131,7 +134,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
         return;
       }
 
-      // Handle clear command specially
+      // Handle clear command specially - clear outputs but keep welcome message
       if (trimmedInput === "clear") {
         setOutputs([]);
         return;
@@ -244,7 +247,9 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
         onClick={handleShellClick}
         onTouchStart={handleShellTouch}
       >
-        <OutputArea outputs={outputs} />
+        <OutputArea
+          outputs={welcomeMessage ? [welcomeMessage, ...outputs] : outputs}
+        />
         <CommandLine
           onExecute={handleExecute}
           username="visitor"

@@ -1,5 +1,24 @@
 import { CustomCommand, CommandRegistry, BUILT_IN_COMMANDS } from "./types";
 
+/**
+ * Creates a command registry that manages both built-in and custom commands.
+ * Validates custom commands on initialization and filters out invalid entries.
+ *
+ * @param customCommands - Array of custom commands to register
+ * @returns A CommandRegistry instance with methods to query and manage commands
+ *
+ * @example
+ * ```typescript
+ * const registry = createCommandRegistry([
+ *   { name: "linkedin", type: "link", value: "https://linkedin.com/in/user" },
+ *   { name: "about", type: "text", value: "About me..." }
+ * ]);
+ *
+ * const allCommands = registry.getAllCommands(); // ["ls", "cd", ..., "linkedin", "about"]
+ * const isBuiltIn = registry.isBuiltIn("ls"); // true
+ * const linkedinCmd = registry.getCommand("linkedin"); // CustomCommand object
+ * ```
+ */
 export const createCommandRegistry = (
   customCommands: CustomCommand[]
 ): CommandRegistry => {

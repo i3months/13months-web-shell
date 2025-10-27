@@ -12,9 +12,22 @@ import { executeCustom } from "./customHandlers";
 import { createCommandRegistry } from "../../../entities/command/model/CommandRegistry";
 
 /**
- * Main command executor
- * Routes commands to built-in or custom handlers
- * Returns CommandResult with success, output, and error
+ * Main command executor that processes user input and routes to appropriate handlers.
+ * Parses the input, determines if it's a built-in or custom command, and executes it.
+ *
+ * @param input - The raw command string entered by the user
+ * @param context - Execution context containing file system, custom commands, and environment
+ * @returns CommandResult with success status, output text, and optional error message
+ *
+ * @example
+ * ```typescript
+ * const result = executeCommand("ls -la", context);
+ * if (result.success) {
+ *   console.log(result.output);
+ * } else {
+ *   console.error(result.error);
+ * }
+ * ```
  */
 export const executeCommand = (
   input: string,
@@ -56,7 +69,13 @@ export const executeCommand = (
 };
 
 /**
- * Routes built-in commands to their handlers
+ * Routes built-in commands to their specific handler functions.
+ * Internal helper function for command execution.
+ *
+ * @param name - The built-in command name (ls, cd, pwd, etc.)
+ * @param args - Array of command arguments
+ * @param context - Execution context
+ * @returns CommandResult from the specific command handler
  */
 const executeBuiltIn = (
   name: string,

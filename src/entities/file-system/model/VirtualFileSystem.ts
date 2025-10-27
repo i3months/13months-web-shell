@@ -1,15 +1,39 @@
 import type { DirectoryNode, FileSystemNode, FileNode } from "./types";
 import { isDirectory } from "./types";
 
+/**
+ * Virtual File System implementation for simulating a directory structure in memory.
+ * Provides methods for navigation, listing directories, and accessing files.
+ *
+ * @example
+ * ```typescript
+ * const vfs = new VirtualFileSystem();
+ * vfs.changeDirectory("projects");
+ * const files = vfs.listDirectory();
+ * ```
+ */
 export class VirtualFileSystem {
   private root: DirectoryNode;
   private currentPath: string[];
 
+  /**
+   * Creates a new VirtualFileSystem instance with an initial directory structure.
+   * Starts at /home/user directory by default.
+   */
   constructor() {
     this.root = this.createInitialStructure();
     this.currentPath = ["home", "user"];
   }
 
+  /**
+   * Creates the initial directory structure with sample files and folders.
+   * Structure includes:
+   * - /home/user/about.txt
+   * - /home/user/contact.txt
+   * - /home/user/projects/README.md
+   *
+   * @returns The root directory node
+   */
   private createInitialStructure(): DirectoryNode {
     // Create root directory
     const root: DirectoryNode = {
@@ -86,6 +110,11 @@ More projects coming soon...`,
     return root;
   }
 
+  /**
+   * Gets the current working directory path as a string.
+   *
+   * @returns The current path (e.g., "/home/user" or "/" for root)
+   */
   getCurrentPath(): string {
     if (this.currentPath.length === 0) {
       return "/";
@@ -93,6 +122,22 @@ More projects coming soon...`,
     return "/" + this.currentPath.join("/");
   }
 
+  /**
+   * Changes the current working directory to the specified path.
+   * Supports absolute paths (/home/user), relative paths (projects, ../),
+   * and special paths (~, /, ., ..).
+   *
+   * @param path - The target directory path
+   * @returns true if the directory change was successful, false if the path doesn't exist or is not a directory
+   *
+   * @example
+   * ```typescript
+   * vfs.changeDirectory("projects");     // Relative path
+   * vfs.changeDirectory("/home/user");   // Absolute path
+   * vfs.changeDirectory("..");           // Parent directory
+   * vfs.changeDirectory("~");            // Home directory
+   * ```
+   */
   changeDirectory(path: string): boolean {
     // Handle special cases
     if (path === "" || path === "~") {
@@ -150,6 +195,13 @@ More projects coming soon...`,
     return true;
   }
 
+  /**
+   * Retrieves a file system node by its path segments.
+   * Internal helper method for path resolution.
+   *
+   * @param pathSegments - Array of path segments (e.g., ["home", "user", "projects"])
+   * @returns The file system node at the path, or null if not found
+   */
   private getNodeByPath(pathSegments: string[]): FileSystemNode | null {
     let current: FileSystemNode = this.root;
 
@@ -169,6 +221,21 @@ More projects coming soon...`,
     return current;
   }
 
+  /**
+   * Lists the contents of a directory.
+   *
+   * @param path - Optional path to list. If not provided, lists current directory.
+   *               Supports absolute and relative paths.
+   * @returns Array of file system nodes (files and directories) in the specified directory.
+   *          Returns empty array if path doesn't exist or is not a directory.
+   *
+   * @example
+   * ```typescript
+   * vfs.listDirectory();           // List current directory
+   * vfs.listDirectory("/home");    // List /home directory
+   * vfs.listDirectory("projects"); // List projects subdirectory
+   * ```
+   */
   listDirectory(path?: string): FileSystemNode[] {
     let targetPath: string[];
 
@@ -207,6 +274,20 @@ More projects coming soon...`,
     return Array.from(node.children.values());
   }
 
+  /**
+   * Retrieves a specific file system node by its path.
+   *
+   * @param path - The path to the node (absolute or relative)
+   * @returns The file system node at the path, or null if not found
+   *
+   * @example
+   * ```typescript
+   * const node = vfs.getNode("/home/user/about.txt");
+   * if (node && node.type === "file") {
+   *   console.log(node.content);
+   * }
+   * ```
+   */
   getNode(path: string): FileSystemNode | null {
     if (path === "/" || path === "") {
       return this.root;

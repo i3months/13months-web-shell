@@ -2,7 +2,19 @@ import type { CommandResult, ExecutionContext } from "./types";
 import { isDirectory } from "../../../entities/file-system/model/types";
 
 /**
- * Handles the 'ls' command - lists directory contents
+ * Handles the 'ls' command - lists directory contents.
+ * Displays files and directories in the specified path.
+ * Directories are shown with a trailing slash (/).
+ *
+ * @param args - Command arguments. First argument is the path (defaults to current directory)
+ * @param context - Execution context with file system access
+ * @returns CommandResult with directory listing or error message
+ *
+ * @example
+ * ```typescript
+ * handleLs([], context);           // List current directory
+ * handleLs(["projects"], context); // List projects directory
+ * ```
  */
 export const handleLs = (
   args: string[],
@@ -54,7 +66,11 @@ export const handleLs = (
 };
 
 /**
- * Handles the 'pwd' command - prints working directory
+ * Handles the 'pwd' command - prints the current working directory path.
+ *
+ * @param _args - Command arguments (unused)
+ * @param context - Execution context with current path
+ * @returns CommandResult with the current directory path
  */
 export const handlePwd = (
   _args: string[],
@@ -67,8 +83,13 @@ export const handlePwd = (
 };
 
 /**
- * Handles the 'clear' command - clears the output
- * Note: This returns a special marker that the shell component will recognize
+ * Handles the 'clear' command - clears the terminal output.
+ * Returns a special marker "__CLEAR__" that the shell component recognizes
+ * to clear all previous output from the display.
+ *
+ * @param _args - Command arguments (unused)
+ * @param _context - Execution context (unused)
+ * @returns CommandResult with special clear marker
  */
 export const handleClear = (
   _args: string[],
@@ -81,7 +102,18 @@ export const handleClear = (
 };
 
 /**
- * Handles the 'echo' command - displays text
+ * Handles the 'echo' command - displays text to the terminal.
+ * Joins all arguments with spaces and outputs them.
+ *
+ * @param args - Command arguments to display
+ * @param _context - Execution context (unused)
+ * @returns CommandResult with the text to display
+ *
+ * @example
+ * ```typescript
+ * handleEcho(["Hello", "World"], context);
+ * // Output: "Hello World"
+ * ```
  */
 export const handleEcho = (
   args: string[],
@@ -95,7 +127,12 @@ export const handleEcho = (
 };
 
 /**
- * Handles the 'help' command - shows available commands
+ * Handles the 'help' command - displays all available commands with descriptions.
+ * Shows both built-in commands and custom commands with their usage information.
+ *
+ * @param _args - Command arguments (unused)
+ * @param context - Execution context with custom commands list
+ * @returns CommandResult with formatted help text
  */
 export const handleHelp = (
   _args: string[],

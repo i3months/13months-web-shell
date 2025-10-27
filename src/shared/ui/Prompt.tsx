@@ -1,11 +1,27 @@
 import React from "react";
 
+/**
+ * Props for the Prompt component.
+ */
 interface PromptProps {
+  /** The username to display (e.g., "user") */
   username: string;
+  /** The hostname to display (e.g., "localhost") */
   hostname: string;
+  /** The current working directory path (e.g., "/home/user") */
   currentPath: string;
 }
 
+/**
+ * Terminal prompt component that displays the command line prompt.
+ * Shows username@hostname:path$ format similar to Unix/Linux shells.
+ *
+ * @example
+ * ```tsx
+ * <Prompt username="user" hostname="localhost" currentPath="/home/user" />
+ * // Renders: user@localhost:/home/user$
+ * ```
+ */
 export const Prompt: React.FC<PromptProps> = ({
   username,
   hostname,

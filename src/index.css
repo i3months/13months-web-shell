@@ -103,26 +103,26 @@
   height: 36px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 12px;
   border-bottom: 1px solid #1a1a1a;
   user-select: none;
+  position: relative;
 }
 
 .title-bar-text {
   color: #ddd;
   font-size: 13px;
   font-weight: 500;
-  flex: 1;
-  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   pointer-events: none;
 }
 
 .title-bar-controls {
   display: flex;
   gap: 8px;
-  position: absolute;
-  right: 8px;
+  z-index: 1;
 }
 
 .title-bar-button {

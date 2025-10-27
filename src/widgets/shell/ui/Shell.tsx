@@ -250,8 +250,14 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
           cursor: isDragging ? "grabbing" : "grab",
         }}
       >
-        <div className="title-bar-text">visitor@13months: {currentPath}</div>
         <div className="title-bar-controls">
+          <button
+            className="title-bar-button close"
+            onClick={handleClose}
+            title="Close"
+          >
+            <span>×</span>
+          </button>
           <button
             className="title-bar-button minimize"
             onClick={handleMinimize}
@@ -266,14 +272,8 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
           >
             <span>{isMaximized ? "❐" : "□"}</span>
           </button>
-          <button
-            className="title-bar-button close"
-            onClick={handleClose}
-            title="Close"
-          >
-            <span>×</span>
-          </button>
         </div>
+        <div className="title-bar-text">visitor@13months: {currentPath}</div>
       </div>
 
       {/* Terminal content */}

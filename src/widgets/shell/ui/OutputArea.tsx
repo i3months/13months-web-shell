@@ -5,6 +5,12 @@ export interface OutputItem {
   type: "command" | "output" | "error" | "system";
   content: string;
   timestamp: number;
+  prompt?: {
+    username: string;
+    hostname: string;
+    path: string;
+  };
+  command?: string;
 }
 
 interface OutputAreaProps {
@@ -31,8 +37,26 @@ export const OutputArea: React.FC<OutputAreaProps> = ({ outputs }) => {
       {limitedOutputs.map((item) => (
         <div key={item.id} className="output-item mb-1 select-text">
           {item.type === "command" && (
-            <div className="text-terminal-text font-mono whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base">
-              {item.content}
+            <div className="font-mono whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base">
+              {item.prompt ? (
+                <>
+                  <span className="font-bold" style={{ color: "#8ae234" }}>
+                    {item.prompt.username}
+                  </span>
+                  <span className="text-white">@</span>
+                  <span className="font-bold" style={{ color: "#8ae234" }}>
+                    {item.prompt.hostname}
+                  </span>
+                  <span className="text-white">:</span>
+                  <span className="font-bold" style={{ color: "#8ae234" }}>
+                    {item.prompt.path}
+                  </span>
+                  <span className="text-white">$ </span>
+                  <span className="text-white">{item.command}</span>
+                </>
+              ) : (
+                <span className="text-white">{item.content}</span>
+              )}
             </div>
           )}
           {item.type === "output" && (

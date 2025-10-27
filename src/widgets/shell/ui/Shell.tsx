@@ -90,9 +90,15 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
 
   // Display welcome message on mount and when size changes
   useEffect(() => {
-    // Choose welcome message based on window size
+    // Choose welcome message based on window size and viewport
     const getWelcomeMessageText = () => {
       const width = size.width;
+      const viewportWidth = window.innerWidth;
+
+      // Mobile devices (viewport < 768px) always use small message
+      if (viewportWidth < 768) return WELCOME_MESSAGE_SMALL;
+
+      // Desktop: based on window size
       if (width >= 1200) return WELCOME_MESSAGE_LARGE;
       if (width >= 1100) return WELCOME_MESSAGE_MEDIUM;
       return WELCOME_MESSAGE_SMALL;
@@ -118,13 +124,18 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     (input: string) => {
       const trimmedInput = input.trim();
 
-      // Add command to output (format as prompt + command)
-      const promptText = `visitor@13months:${currentPath}$ ${trimmedInput}`;
+      // Add command to output with colored prompt
       const commandItem: OutputItem = {
         id: `cmd-${Date.now()}-${Math.random()}`,
         type: "command",
-        content: promptText,
+        content: `visitor@13months:${currentPath}$ ${trimmedInput}`,
         timestamp: Date.now(),
+        prompt: {
+          username: "visitor",
+          hostname: "13months",
+          path: currentPath,
+        },
+        command: trimmedInput,
       };
 
       setOutputs((prev) => [...prev, commandItem]);

@@ -2,9 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+/* SUITE Font Family */
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 300;
+  src: url('/fonts/SUITE/SUITE-Light.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 400;
+  src: url('/fonts/SUITE/SUITE-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 500;
+  src: url('/fonts/SUITE/SUITE-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 600;
+  src: url('/fonts/SUITE/SUITE-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 700;
+  src: url('/fonts/SUITE/SUITE-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 800;
+  src: url('/fonts/SUITE/SUITE-ExtraBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 900;
+  src: url('/fonts/SUITE/SUITE-Heavy.woff2') format('woff2');
+  font-display: swap;
+}
+
 @layer base {
   body {
-    @apply font-mono;
+    font-family: 'Ubuntu Mono', 'Consolas', 'Monaco', monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
@@ -94,7 +144,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  font-family: "Ubuntu Mono", "Consolas", monospace;
+  font-family: "Ubuntu Mono", "Consolas", "Monaco", monospace;
 }
 
 /* Title bar */
@@ -113,9 +163,9 @@
 .title-bar-text {
   color: #dcdcdc;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 600;
   pointer-events: none;
-  font-family: "Ubuntu", system-ui, sans-serif;
+  font-family: "SUITE", "Ubuntu", system-ui, sans-serif;
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
@@ -208,6 +258,11 @@
   padding: 16px;
   overflow-y: auto;
   overflow-x: hidden;
+  font-family: "Ubuntu Mono", "Consolas", "Monaco", monospace;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Output area styling for Ubuntu theme */
@@ -216,6 +271,7 @@
   overflow-y: visible;
   overflow-x: hidden;
   color: #ffffff;
+  font-weight: 700;
 }
 
 /* Command line styling */
@@ -225,6 +281,7 @@
   color: #8ae234;
   flex-shrink: 0;
   margin-top: 0;
+  font-weight: 700;
 }
 
 /* Cursor animation */

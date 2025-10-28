@@ -51,9 +51,11 @@ export const parseCommand = (input: string): ParsedCommand => {
     tokens.push(current);
   }
 
+  // If no tokens but input had content (e.g., only quotes), treat as invalid command
   if (tokens.length === 0) {
+    // Return the original trimmed input as the command name so it shows "command not found"
     return {
-      name: "",
+      name: trimmed,
       args: [],
       flags: {},
     };

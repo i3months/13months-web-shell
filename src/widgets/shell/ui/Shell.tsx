@@ -57,6 +57,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   const [outputs, setOutputs] = useState<OutputItem[]>([]);
   const [welcomeMessage, setWelcomeMessage] = useState<OutputItem | null>(null);
   const [availableCommands, setAvailableCommands] = useState<string[]>([]);
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const shellRef = useRef<HTMLDivElement>(null);
 
   // Initial window position (centered)
@@ -124,6 +125,11 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
     (input: string) => {
       const trimmedInput = input.trim();
 
+      // Add command to history if not empty
+      if (trimmedInput) {
+        setCommandHistory((prev) => [...prev, trimmedInput]);
+      }
+
       // Add command to output with colored prompt
       const commandItem: OutputItem = {
         id: `cmd-${Date.now()}-${Math.random()}`,
@@ -156,6 +162,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
         fileSystem,
         currentPath,
         customCommands,
+        commandHistory,
       });
 
       // Add result to output
@@ -177,7 +184,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
         setOutputs((prev) => [...prev, outputItem]);
       }
     },
-    [currentPath, fileSystem]
+    [currentPath, fileSystem, commandHistory]
   );
 
   const handleShellClick = useCallback(() => {

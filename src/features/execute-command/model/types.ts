@@ -38,4 +38,6 @@ export interface ExecutionContext {
   currentPath: string;
   /** Array of available custom commands */
   customCommands: CustomCommand[];
+  /** Command history array (optional) */
+  commandHistory?: string[];
 }

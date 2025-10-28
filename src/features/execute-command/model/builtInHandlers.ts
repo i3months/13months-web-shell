@@ -156,6 +156,37 @@ export const handleEcho = (
 };
 
 /**
+ * Handles the 'history' command - displays command history.
+ * Shows a numbered list of previously executed commands.
+ *
+ * @param _args - Command arguments (unused)
+ * @param context - Execution context with command history
+ * @returns CommandResult with formatted history list
+ */
+export const handleHistory = (
+  _args: string[],
+  context: ExecutionContext
+): CommandResult => {
+  const { commandHistory = [] } = context;
+
+  if (commandHistory.length === 0) {
+    return {
+      success: true,
+      output: "",
+    };
+  }
+
+  const output = commandHistory
+    .map((cmd, index) => `  ${(index + 1).toString().padStart(3)}  ${cmd}`)
+    .join("\n");
+
+  return {
+    success: true,
+    output,
+  };
+};
+
+/**
  * Handles the 'help' command - displays all available commands with descriptions.
  * Shows both built-in commands and custom commands with their usage information.
  *
@@ -177,6 +208,7 @@ Built-in Commands:
   pwd             Print working directory
   echo <text>     Display text
   clear           Clear the terminal
+  history         Show command history
   help            Show this help message
 `;
 

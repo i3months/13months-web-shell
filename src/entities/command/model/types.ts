@@ -32,7 +32,14 @@ export interface CommandRegistry {
  * Union type of all built-in command names.
  * These commands are implemented in the shell core.
  */
-export type BuiltInCommand = "ls" | "cd" | "pwd" | "echo" | "clear" | "help";
+export type BuiltInCommand =
+  | "ls"
+  | "cd"
+  | "pwd"
+  | "echo"
+  | "clear"
+  | "history"
+  | "help";
 
 /**
  * Array of all built-in command names.
@@ -44,5 +51,6 @@ export const BUILT_IN_COMMANDS: BuiltInCommand[] = [
   "pwd",
   "echo",
   "clear",
+  "history",
   "help",
 ];

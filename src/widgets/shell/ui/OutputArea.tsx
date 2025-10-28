@@ -64,8 +64,16 @@ export const OutputArea: React.FC<OutputAreaProps> = ({
             </div>
           )}
           {item.type === "output" && (
-            <div className="text-terminal-text font-mono whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base">
-              {item.content}
+            <div
+              className="text-terminal-text font-mono whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {item.content.split("\n").map((line, i, arr) => (
+                <React.Fragment key={i}>
+                  {line}
+                  {i < arr.length - 1 && <br />}
+                </React.Fragment>
+              ))}
             </div>
           )}
           {item.type === "error" && (

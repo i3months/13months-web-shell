@@ -5,41 +5,48 @@ import { isDirectory } from "../../../entities/file-system/model/types";
  * Handles the 'ls' command - lists directory contents.
  * Displays files and directories in the specified path.
  * Directories are shown with a trailing slash (/).
+ * Supports -l flag for detailed listing.
  *
- * @param args - Command arguments. First argument is the path (defaults to current directory)
+ * @param args - Command arguments (path)
  * @param context - Execution context with file system access
+ * @param flags - Command flags object
  * @returns CommandResult with directory listing or error message
  *
  * @example
  * ```typescript
- * handleLs([], context);           // List current directory
- * handleLs(["projects"], context); // List projects directory
+ * handleLs([], context, {});           // List current directory
+ * handleLs([], context, { l: true });  // List with details
+ * handleLs(["projects"], context, {}); // List projects directory
  * ```
  */
 export const handleLs = (
   args: string[],
-  context: ExecutionContext
+  context: ExecutionContext,
+  flags: Record<string, boolean | string> = {}
 ): CommandResult => {
   const { fileSystem } = context;
-  const path = args[0] || ".";
 
-  const nodes = fileSystem.listDirectory(path);
+  // Check for long format flag
+  const hasLongFormat = flags.l === true || flags.a === true;
+  const pathArg = args[0] || ".";
+
+  const nodes = fileSystem.listDirectory(pathArg);
 
   if (nodes.length === 0) {
     // Check if path exists
-    const node = fileSystem.getNode(path);
+    const node = fileSystem.getNode(pathArg);
     if (!node) {
       return {
         success: false,
         output: "",
-        error: `ls: cannot access '${path}': No such file or directory`,
+        error: `ls: cannot access '${pathArg}': No such file or directory`,
       };
     }
     if (!isDirectory(node)) {
       return {
         success: false,
         output: "",
-        error: `ls: cannot access '${path}': Not a directory`,
+        error: `ls: cannot access '${pathArg}': Not a directory`,
       };
     }
     // Empty directory
@@ -49,19 +56,41 @@ export const handleLs = (
     };
   }
 
-  // Format output: directories with /, files without
-  const output = nodes
-    .map((node) => {
-      if (isDirectory(node)) {
-        return `${node.name}/`;
-      }
-      return node.name;
-    })
-    .join("  ");
+  // Format output based on flags
+  if (hasLongFormat) {
+    // Long format: show permissions, size, date, name (one per line)
+    const lines = nodes.map((node) => {
+      const type = isDirectory(node) ? "d" : "-";
+      const perms = isDirectory(node) ? "rwxr-xr-x" : "rw-r--r--";
+      const size = isDirectory(node) ? "4096" : "1024";
+      const date = "Oct 28 12:00";
+      const name = isDirectory(node) ? `${node.name}/` : node.name;
+      return `${type}${perms}  1 visitor visitor ${size.padStart(
+        6
+      )} ${date} ${name}`;
+    });
+
+    const output = lines.join("\n");
+    console.log("ls -l output:", JSON.stringify(output));
+    console.log("Contains newline:", output.includes("\n"));
+
+    return {
+      success: true,
+      output,
+    };
+  }
+
+  // Simple format: directories with /, files without (horizontal)
+  const items = nodes.map((node) => {
+    if (isDirectory(node)) {
+      return `${node.name}/`;
+    }
+    return node.name;
+  });
 
   return {
     success: true,
-    output,
+    output: items.join("  "),
   };
 };
 

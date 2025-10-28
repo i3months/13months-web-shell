@@ -1,4 +1,4 @@
-import type { CommandResult, ExecutionContext } from "./types";
+import type { CommandResult, ExecutionContext, ParsedCommand } from "./types";
 import { parseCommand } from "./parseCommand";
 import {
   handleLs,
@@ -49,7 +49,7 @@ export const executeCommand = (
 
   // Check if it's a built-in command
   if (registry.isBuiltIn(parsed.name)) {
-    return executeBuiltIn(parsed.name, parsed.args, context);
+    return executeBuiltIn(parsed.name, parsed, context);
   }
 
   // Check if it's a custom command
@@ -73,28 +73,28 @@ export const executeCommand = (
  * Internal helper function for command execution.
  *
  * @param name - The built-in command name (ls, cd, pwd, etc.)
- * @param args - Array of command arguments
+ * @param parsed - Parsed command with args and flags
  * @param context - Execution context
  * @returns CommandResult from the specific command handler
  */
 const executeBuiltIn = (
   name: string,
-  args: string[],
+  parsed: ParsedCommand,
   context: ExecutionContext
 ): CommandResult => {
   switch (name) {
     case "ls":
-      return handleLs(args, context);
+      return handleLs(parsed.args, context, parsed.flags);
     case "cd":
-      return handleCd(args, context);
+      return handleCd(parsed.args, context);
     case "pwd":
-      return handlePwd(args, context);
+      return handlePwd(parsed.args, context);
     case "echo":
-      return handleEcho(args, context);
+      return handleEcho(parsed.args, context);
     case "clear":
-      return handleClear(args, context);
+      return handleClear(parsed.args, context);
     case "help":
-      return handleHelp(args, context);
+      return handleHelp(parsed.args, context);
     default:
       return {
         success: false,

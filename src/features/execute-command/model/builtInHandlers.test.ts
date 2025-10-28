@@ -65,6 +65,27 @@ describe("builtInHandlers", () => {
       const result = handleLs([], context);
       expect(result.output).toContain("projects/");
     });
+
+    it("should show long format with -l flag", () => {
+      const result = handleLs(["-l"], context);
+      expect(result.success).toBe(true);
+      // Should contain newlines for multi-line output
+      expect(result.output).toContain("\n");
+      // Should contain file details
+      expect(result.output).toMatch(/[d-]rw[xr-]/);
+    });
+
+    it("should show long format with -la flag", () => {
+      const result = handleLs(["-la"], context);
+      expect(result.success).toBe(true);
+      expect(result.output).toContain("\n");
+    });
+
+    it("should show long format with -al flag", () => {
+      const result = handleLs(["-al"], context);
+      expect(result.success).toBe(true);
+      expect(result.output).toContain("\n");
+    });
   });
 
   describe("handlePwd", () => {

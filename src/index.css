@@ -272,6 +272,11 @@
   font-weight: 700;
 }
 
+.output-area .output-item {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 /* Command line styling */
 .command-line {
   display: flex;

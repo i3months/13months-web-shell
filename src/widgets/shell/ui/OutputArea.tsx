@@ -39,7 +39,7 @@ export const OutputArea: React.FC<OutputAreaProps> = ({
   return (
     <div ref={containerRef} className="output-area">
       {limitedOutputs.map((item) => (
-        <div key={item.id} className="output-item mb-1 select-text">
+        <div key={item.id} className="output-item select-text">
           {item.type === "command" && (
             <div className="font-mono whitespace-pre-wrap break-words text-xs sm:text-sm md:text-base">
               {item.prompt ? (

@@ -238,6 +238,7 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
       <div
         className="title-bar"
         onMouseDown={handleDragStart}
+        onDoubleClick={handleMaximize}
         style={{
           cursor: isDragging ? "grabbing" : "grab",
         }}

@@ -32,15 +32,15 @@ describe("builtInHandlers", () => {
     it("should list current directory contents", () => {
       const result = handleLs([], context);
       expect(result.success).toBe(true);
-      expect(result.output).toContain("about.txt");
-      expect(result.output).toContain("contact.txt");
-      expect(result.output).toContain("projects/");
+      expect(result.output).toContain("Slowly.java");
+      expect(result.output).toContain("Steadily.js");
+      expect(result.output).toContain("Quietly.py");
     });
 
     it("should list specified directory", () => {
-      const result = handleLs(["projects"], context);
+      const result = handleLs(["/home"], context);
       expect(result.success).toBe(true);
-      expect(result.output).toContain("README.md");
+      expect(result.output).toContain("user/");
     });
 
     it("should return error for non-existent directory", () => {
@@ -50,7 +50,7 @@ describe("builtInHandlers", () => {
     });
 
     it("should return error when trying to ls a file", () => {
-      const result = handleLs(["about.txt"], context);
+      const result = handleLs(["Slowly.java"], context);
       expect(result.success).toBe(false);
       expect(result.error).toContain("Not a directory");
     });
@@ -62,27 +62,27 @@ describe("builtInHandlers", () => {
     });
 
     it("should show directories with trailing slash", () => {
-      const result = handleLs([], context);
-      expect(result.output).toContain("projects/");
+      const result = handleLs(["/home"], context);
+      expect(result.output).toContain("user/");
     });
 
     it("should show long format with -l flag", () => {
-      const result = handleLs(["-l"], context);
+      const result = handleLs([], context, { l: true });
       expect(result.success).toBe(true);
       // Should contain newlines for multi-line output
       expect(result.output).toContain("\n");
-      // Should contain file details
-      expect(result.output).toMatch(/[d-]rw[xr-]/);
+      // Should contain file names
+      expect(result.output).toContain("Slowly.java");
     });
 
     it("should show long format with -la flag", () => {
-      const result = handleLs(["-la"], context);
+      const result = handleLs([], context, { l: true, a: true });
       expect(result.success).toBe(true);
       expect(result.output).toContain("\n");
     });
 
     it("should show long format with -al flag", () => {
-      const result = handleLs(["-al"], context);
+      const result = handleLs([], context, { a: true, l: true });
       expect(result.success).toBe(true);
       expect(result.output).toContain("\n");
     });
@@ -96,12 +96,12 @@ describe("builtInHandlers", () => {
     });
 
     it("should return updated path after directory change", () => {
-      context.fileSystem.changeDirectory("projects");
+      context.fileSystem.changeDirectory("/home");
       context.currentPath = context.fileSystem.getCurrentPath();
 
       const result = handlePwd([], context);
       expect(result.success).toBe(true);
-      expect(result.output).toBe("/home/user/projects");
+      expect(result.output).toBe("/home");
     });
   });
 

@@ -33,7 +33,7 @@ describe("Shell", () => {
   it("should render welcome message on mount", () => {
     render(<ShellWithProvider />);
     expect(
-      screen.getByText(/Welcome to 13months Web Shell Portfolio/)
+      screen.getByText(/Type 'help' to see all available commands/)
     ).toBeInTheDocument();
   });
 

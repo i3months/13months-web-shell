@@ -33,7 +33,7 @@ describe("executeCommand", () => {
     it("should execute ls command", async () => {
       const result = await executeCommand("ls", context);
       expect(result.success).toBe(true);
-      expect(result.output).toContain("about.txt");
+      expect(result.output).toContain("Slowly.java");
     });
 
     it("should execute pwd command", async () => {
@@ -61,9 +61,9 @@ describe("executeCommand", () => {
     });
 
     it("should execute cd command", async () => {
-      const result = await executeCommand("cd projects", context);
+      const result = await executeCommand("cd /home", context);
       expect(result.success).toBe(true);
-      expect(context.fileSystem.getCurrentPath()).toBe("/home/user/projects");
+      expect(context.fileSystem.getCurrentPath()).toBe("/home");
     });
   });
 
@@ -127,19 +127,19 @@ describe("executeCommand", () => {
   describe("context updates", () => {
     it("should update context after cd command", async () => {
       const initialPath = context.currentPath;
-      await executeCommand("cd projects", context);
+      await executeCommand("cd /home", context);
       const newPath = context.fileSystem.getCurrentPath();
 
       expect(newPath).not.toBe(initialPath);
-      expect(newPath).toBe("/home/user/projects");
+      expect(newPath).toBe("/home");
     });
 
     it("should maintain context across multiple commands", async () => {
-      await executeCommand("cd projects", context);
+      await executeCommand("cd /home", context);
       context.currentPath = context.fileSystem.getCurrentPath();
 
       const result = await executeCommand("pwd", context);
-      expect(result.output).toBe("/home/user/projects");
+      expect(result.output).toBe("/home");
     });
   });
 });

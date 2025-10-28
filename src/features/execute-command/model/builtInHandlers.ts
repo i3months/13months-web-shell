@@ -187,6 +187,25 @@ export const handleHistory = (
 };
 
 /**
+ * Handles the 'exit' command - closes the terminal window.
+ * Returns a special marker "__EXIT__" that the shell component recognizes
+ * to close the window.
+ *
+ * @param _args - Command arguments (unused)
+ * @param _context - Execution context (unused)
+ * @returns CommandResult with special exit marker
+ */
+export const handleExit = (
+  _args: string[],
+  _context: ExecutionContext
+): CommandResult => {
+  return {
+    success: true,
+    output: "__EXIT__",
+  };
+};
+
+/**
  * Handles the 'help' command - displays all available commands with descriptions.
  * Shows both built-in commands and custom commands with their usage information.
  *
@@ -209,6 +228,7 @@ Built-in Commands:
   echo <text>     Display text
   clear           Clear the terminal
   history         Show command history
+  exit            Close the terminal
   help            Show this help message
 `;
 

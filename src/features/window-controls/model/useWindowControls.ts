@@ -57,9 +57,14 @@ export const useWindowControls = ({
   ]);
 
   const handleClose = useCallback(() => {
+    // In a real app, this would close the window
+    // For now, we'll just hide it or reload the page
     if (confirm("Close terminal?")) {
-      // In a real app, this would close the window
-      window.close();
+      // Option 1: Reload the page (simulates closing and reopening)
+      window.location.reload();
+
+      // Option 2: Navigate to a blank page (uncomment if preferred)
+      // window.location.href = 'about:blank';
     }
   }, []);
 

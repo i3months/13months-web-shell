@@ -7,6 +7,7 @@ import {
   handleEcho,
   handleHelp,
   handleHistory,
+  handleExit,
 } from "./builtInHandlers";
 import { handleCd } from "./cdHandler";
 import { executeCustom } from "./customHandlers";
@@ -96,6 +97,8 @@ const executeBuiltIn = (
       return handleClear(parsed.args, context);
     case "history":
       return handleHistory(parsed.args, context);
+    case "exit":
+      return handleExit(parsed.args, context);
     case "help":
       return handleHelp(parsed.args, context);
     default:

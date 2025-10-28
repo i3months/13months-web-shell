@@ -165,6 +165,13 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
         commandHistory,
       });
 
+      // Handle exit command specially - close the window
+      if (result.output === "__EXIT__") {
+        // Reload the page to "close" the terminal
+        window.location.reload();
+        return;
+      }
+
       // Add result to output
       if (result.error) {
         const errorItem: OutputItem = {

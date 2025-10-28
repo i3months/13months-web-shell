@@ -39,6 +39,7 @@ export type BuiltInCommand =
   | "echo"
   | "clear"
   | "history"
+  | "exit"
   | "help";
 
 /**
@@ -52,5 +53,6 @@ export const BUILT_IN_COMMANDS: BuiltInCommand[] = [
   "echo",
   "clear",
   "history",
+  "exit",
   "help",
 ];

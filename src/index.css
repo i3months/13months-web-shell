@@ -4,57 +4,57 @@
 
 /* SUITE Font Family */
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 300;
-  src: url('/fonts/SUITE/SUITE-Light.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-Light.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 400;
-  src: url('/fonts/SUITE/SUITE-Regular.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-Regular.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 500;
-  src: url('/fonts/SUITE/SUITE-Medium.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-Medium.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 600;
-  src: url('/fonts/SUITE/SUITE-SemiBold.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-SemiBold.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 700;
-  src: url('/fonts/SUITE/SUITE-Bold.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-Bold.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 800;
-  src: url('/fonts/SUITE/SUITE-ExtraBold.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-ExtraBold.woff2") format("woff2");
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'SUITE';
+  font-family: "SUITE";
   font-weight: 900;
-  src: url('/fonts/SUITE/SUITE-Heavy.woff2') format('woff2');
+  src: url("/fonts/SUITE/SUITE-Heavy.woff2") format("woff2");
   font-display: swap;
 }
 
 @layer base {
   body {
-    font-family: 'Ubuntu Mono', 'Consolas', 'Monaco', monospace;
+    font-family: "Ubuntu Mono", "Consolas", "Monaco", monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
@@ -198,14 +198,18 @@
 }
 
 .title-bar-button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   border-radius: 50%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
 }
 
 .title-bar-button:hover {
@@ -260,7 +264,7 @@
   font-family: "Ubuntu Mono", "Consolas", "Monaco", monospace;
   font-weight: 700;
   font-size: 13px;
-  line-height: 1.0;
+  line-height: 1;
   letter-spacing: 0.02em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -284,15 +288,17 @@
   margin: 0;
   padding: 0;
   font-weight: 700;
-  line-height: 1.0;
+  line-height: 1;
 }
 
 /* Cursor animation */
 @keyframes blink {
-  0%, 49% {
+  0%,
+  49% {
     opacity: 1;
   }
-  50%, 100% {
+  50%,
+  100% {
     opacity: 0;
   }
 }
@@ -381,7 +387,7 @@
     height: 100vh !important;
     border-radius: 0;
   }
-  
+
   .title-bar {
     cursor: default !important;
   }

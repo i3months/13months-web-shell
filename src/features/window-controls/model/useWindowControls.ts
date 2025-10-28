@@ -27,12 +27,7 @@ export const useWindowControls = ({
   const [prevPosition, setPrevPosition] = useState<Position>(position);
   const [prevSize, setPrevSize] = useState<Size>(size);
 
-  const handleMinimize = useCallback(() => {
-    // In a real app, this would minimize to taskbar
-    alert(
-      "Minimize functionality - in a real app, this would minimize the window"
-    );
-  }, []);
+  const handleMinimize = useCallback(() => {}, []);
 
   const handleMaximize = useCallback(() => {
     if (isMaximized) {

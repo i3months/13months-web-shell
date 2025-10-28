@@ -35,12 +35,6 @@ export const customCommands: CustomCommand[] = [
     description: "Open personal blog",
   },
   {
-    name: "hobby",
-    type: "text",
-    value: "🎹 Piano, 📸 Photography, 💻 Coding",
-    description: "Display hobbies",
-  },
-  {
     name: "career",
     type: "text",
     value: "Frontend Engineer | Kakao Tech Campus",

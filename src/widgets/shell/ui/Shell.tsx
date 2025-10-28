@@ -260,14 +260,15 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
       >
         <OutputArea
           outputs={welcomeMessage ? [welcomeMessage, ...outputs] : outputs}
-        />
-        <CommandLine
-          onExecute={handleExecute}
-          username="visitor"
-          hostname="13months"
-          currentPath={currentPath}
-          availableCommands={availableCommands}
-        />
+        >
+          <CommandLine
+            onExecute={handleExecute}
+            username="visitor"
+            hostname="13months"
+            currentPath={currentPath}
+            availableCommands={availableCommands}
+          />
+        </OutputArea>
       </div>
 
       {/* Resize handles */}

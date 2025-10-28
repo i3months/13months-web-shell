@@ -91,7 +91,7 @@ export const CommandLine: React.FC<CommandLineProps> = ({
 
   return (
     <div
-      className="command-line flex items-center font-mono text-xs sm:text-sm md:text-base flex-shrink-0 touch-target"
+      className="command-line flex font-mono text-xs sm:text-sm md:text-base"
       onTouchStart={handleTouchStart}
     >
       <Prompt

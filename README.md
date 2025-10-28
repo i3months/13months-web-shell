@@ -283,3 +283,4 @@ Edit `src/shared/ui/Prompt.tsx` to customize the prompt display.
 ### Modifying Virtual File System
 
 Edit `src/entities/file-system/model/VirtualFileSystem.ts` to add or modify directories and files.
+d

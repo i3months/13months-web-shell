@@ -15,11 +15,15 @@ export interface OutputItem {
 
 interface OutputAreaProps {
   outputs: OutputItem[];
+  children?: React.ReactNode;
 }
 
 const MAX_OUTPUT_ITEMS = 1000;
 
-export const OutputArea: React.FC<OutputAreaProps> = ({ outputs }) => {
+export const OutputArea: React.FC<OutputAreaProps> = ({
+  outputs,
+  children,
+}) => {
   const outputEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -76,6 +80,7 @@ export const OutputArea: React.FC<OutputAreaProps> = ({ outputs }) => {
           )}
         </div>
       ))}
+      {children}
       <div ref={outputEndRef} />
     </div>
   );

@@ -57,52 +57,46 @@ export class VirtualFileSystem {
     };
 
     // Create files in /home/user
-    const aboutFile: FileNode = {
-      name: "about.txt",
+    const slowlyFile: FileNode = {
+      name: "Slowly.java",
       type: "file",
-      content: `Welcome to 13months' portfolio!
-
-I'm a Frontend Engineer passionate about creating beautiful and functional web experiences.
-
-Type 'help' to see available commands.
-Type 'ls' to see what's here.`,
+      content: `// Slowly but surely
+public class Slowly {
+    public static void main(String[] args) {
+        System.out.println("천천히, 하지만 꾸준히");
+    }
+}`,
     };
 
-    const contactFile: FileNode = {
-      name: "contact.txt",
+    const steadilyFile: FileNode = {
+      name: "Steadily.js",
       type: "file",
-      content: `Contact Information:
+      content: `// Keep going steadily
+console.log("꾸준함이 답이다");
 
-LinkedIn: linkedin
-Blog: blog
-GitHub: (coming soon)
+function keepGoing() {
+    return "Never give up!";
+}
 
-Type the command name to open the link!`,
+export default keepGoing;`,
     };
 
-    // Create /home/user/projects directory
-    const projects: DirectoryNode = {
-      name: "projects",
-      type: "directory",
-      children: new Map(),
-    };
-
-    const projectFile: FileNode = {
-      name: "README.md",
+    const quietlyFile: FileNode = {
+      name: "Quietly.py",
       type: "file",
-      content: `# My Projects
+      content: `# Work quietly, let success make the noise
+def work_quietly():
+    print("조용히 일하고, 성공이 말하게 하라")
+    return True
 
-Check out my work and contributions!
-
-More projects coming soon...`,
+if __name__ == "__main__":
+    work_quietly()`,
     };
-
-    projects.children.set("README.md", projectFile);
 
     // Build the tree structure
-    user.children.set("about.txt", aboutFile);
-    user.children.set("contact.txt", contactFile);
-    user.children.set("projects", projects);
+    user.children.set("Slowly.java", slowlyFile);
+    user.children.set("Steadily.js", steadilyFile);
+    user.children.set("Quietly.py", quietlyFile);
 
     home.children.set("user", user);
     root.children.set("home", home);

@@ -122,20 +122,20 @@ describe("VirtualFileSystem", () => {
     it("should list root directory contents", () => {
       const contents = vfs.listDirectory("/");
       expect(contents).toHaveLength(1);
-      expect(contents[0].name).toBe("home");
+      expect(contents[0]?.name).toBe("home");
     });
 
     it("should list absolute path directory", () => {
       const contents = vfs.listDirectory("/home");
       expect(contents).toHaveLength(1);
-      expect(contents[0].name).toBe("user");
+      expect(contents[0]?.name).toBe("user");
     });
 
     it("should list relative path directory", () => {
       vfs.changeDirectory("/");
       const contents = vfs.listDirectory("home");
       expect(contents).toHaveLength(1);
-      expect(contents[0].name).toBe("user");
+      expect(contents[0]?.name).toBe("user");
     });
 
     it("should return empty array for non-existent directory", () => {
@@ -152,7 +152,7 @@ describe("VirtualFileSystem", () => {
       vfs.changeDirectory("/home/user");
       const contents = vfs.listDirectory("..");
       expect(contents).toHaveLength(1);
-      expect(contents[0].name).toBe("user");
+      expect(contents[0]?.name).toBe("user");
     });
   });
 

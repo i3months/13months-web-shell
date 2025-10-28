@@ -68,17 +68,19 @@ export const Shell: React.FC<ShellProps> = ({ className = "" }) => {
   const initialSize = { width: 1200, height: 700 };
 
   // Window management features
+  const { position, setPosition, isDragging, handleDragStart } = useWindowDrag({
+    initialPosition,
+    size: initialSize,
+    isMaximized: false, // Will be updated by useWindowControls
+  });
+
   const { size, setSize, handleResizeStart } = useWindowResize({
     initialSize,
     minWidth: 400,
     minHeight: 300,
     isMaximized: false, // Will be updated by useWindowControls
-  });
-
-  const { position, setPosition, isDragging, handleDragStart } = useWindowDrag({
-    initialPosition,
-    size,
-    isMaximized: false, // Will be updated by useWindowControls
+    position,
+    setPosition,
   });
 
   const { isMaximized, handleMinimize, handleMaximize, handleClose } =

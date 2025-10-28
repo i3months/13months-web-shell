@@ -5,11 +5,18 @@ interface Size {
   height: number;
 }
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 interface UseWindowResizeProps {
   initialSize: Size;
   minWidth?: number;
   minHeight?: number;
   isMaximized: boolean;
+  position: Position;
+  setPosition: (position: Position) => void;
 }
 
 export const useWindowResize = ({
@@ -17,6 +24,8 @@ export const useWindowResize = ({
   minWidth = 400,
   minHeight = 300,
   isMaximized,
+  position,
+  setPosition,
 }: UseWindowResizeProps) => {
   const [size, setSize] = useState<Size>(initialSize);
   const [isResizing, setIsResizing] = useState(false);
@@ -42,20 +51,36 @@ export const useWindowResize = ({
       setSize((prevSize) => {
         let newWidth = prevSize.width;
         let newHeight = prevSize.height;
+        let newX = position.x;
+        let newY = position.y;
 
+        // Handle horizontal resizing
         if (resizeDirection.includes("e")) {
           newWidth = Math.max(minWidth, prevSize.width + deltaX);
         }
         if (resizeDirection.includes("w")) {
-          const widthChange = Math.min(deltaX, prevSize.width - minWidth);
-          newWidth = prevSize.width - widthChange;
+          const potentialWidth = prevSize.width - deltaX;
+          if (potentialWidth >= minWidth) {
+            newWidth = potentialWidth;
+            newX = position.x + deltaX;
+          }
         }
+
+        // Handle vertical resizing
         if (resizeDirection.includes("s")) {
           newHeight = Math.max(minHeight, prevSize.height + deltaY);
         }
         if (resizeDirection.includes("n")) {
-          const heightChange = Math.min(deltaY, prevSize.height - minHeight);
-          newHeight = prevSize.height - heightChange;
+          const potentialHeight = prevSize.height - deltaY;
+          if (potentialHeight >= minHeight) {
+            newHeight = potentialHeight;
+            newY = position.y + deltaY;
+          }
+        }
+
+        // Update position if it changed
+        if (newX !== position.x || newY !== position.y) {
+          setPosition({ x: newX, y: newY });
         }
 
         return { width: newWidth, height: newHeight };
@@ -74,7 +99,7 @@ export const useWindowResize = ({
       document.removeEventListener("mousemove", handleResizeMove);
       document.removeEventListener("mouseup", handleResizeEnd);
     };
-  }, [isResizing, resizeDirection, minWidth, minHeight]);
+  }, [isResizing, resizeDirection, minWidth, minHeight, position, setPosition]);
 
   return {
     size,

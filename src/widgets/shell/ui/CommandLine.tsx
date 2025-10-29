@@ -21,6 +21,7 @@ export const CommandLine: React.FC<CommandLineProps> = ({
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const commandHistory = useCommandHistory();
+  const isComposingRef = useRef(false);
 
   // Focus input on mount and when clicking anywhere
   useEffect(() => {
@@ -34,6 +35,11 @@ export const CommandLine: React.FC<CommandLineProps> = ({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    // Ignore key events during IME composition
+    if (isComposingRef.current) {
+      return;
+    }
+
     // Handle Enter key - execute command
     if (e.key === "Enter") {
       e.preventDefault();
@@ -108,6 +114,12 @@ export const CommandLine: React.FC<CommandLineProps> = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
+          onCompositionStart={() => {
+            isComposingRef.current = true;
+          }}
+          onCompositionEnd={() => {
+            isComposingRef.current = false;
+          }}
           className="absolute left-0 top-0 w-full bg-transparent border-none outline-none text-terminal-text font-mono caret-transparent text-xs sm:text-sm md:text-base touch-manipulation"
           autoComplete="off"
           autoCorrect="off"
